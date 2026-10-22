@@ -1,0 +1,342 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import RoomSwitch from '../components/RoomSwitch.astro';
+import profile from '../data/profile.json';
+import skills from '../data/skills.json';
+import { SECTIONS } from '../data/sections';
+import { ROOM_BANNER, ROOM_PRINT } from '../data/room';
+
+type Fact = [label: string, value: string | undefined];
+type Img = { src: string; alt: string; w: number; h: number };
+
+// Files in /public, respecting a `base` path if the site is deployed under one.
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const imgUrl = (file: string) => `${base}/images/${file}`;
+const thumbUrl = (file: string) => imgUrl(file.replace(/\.webp$/, '-thumb.webp'));
+const videoUrl = (file: string) => `${base}/videos/${file}`;
+
+// Load a collection, drop drafts, sort, and pre-render each Markdown body.
+async function load<C extends 'projects' | 'designs' | 'work' | 'games' | 'achievements' | 'orgs'>(name: C) {
+  const entries = (await getCollection(name)).filter((e: any) => !e.data.draft);
+  entries.sort((a: any, b: any) => a.data.order - b.data.order);
+  return Promise.all(
+    entries.map(async (e: any) => ({ key: `${name}-${e.id}`, data: e.data, Content: (await render(e)).Content, hasBody: !!e.body?.trim() })),
+  );
+}
+
+const projects = await load('projects');
+const designs = await load('designs');
+const work = await load('work');
+const games = await load('games');
+const achievements = await load('achievements');
+const orgs = await load('orgs');
+
+const spotlight = games.find((e) => e.data.spotlight);
+
+// Pictures the 3D room shows: project screenshots on the monitor, the first client app on the laptop,
+// Organizations photos pinned on the corkboard, the wall banner and the photo in the framed print.
+const firstImg = (d: { images: Img[] }) => (d.images[0] ? imgUrl(d.images[0].src) : null);
+const roomMedia = {
+  monitor: projects.slice(0, 4).map((e) => ({ title: e.data.title, img: firstImg(e.data) })),
+  laptop: work[0] ? { title: work[0].data.title, img: firstImg(work[0].data) } : null,
+  board: orgs.flatMap((e) => e.data.images as Img[]).filter((i) => i.src !== ROOM_BANNER).slice(0, 7).map((i) => imgUrl(i.src)),
+  banner: imgUrl(ROOM_BANNER),
+  print: imgUrl(ROOM_PRINT),
+};
+const title = (id: string) => SECTIONS.find((s) => s.id === id)!.title;
+const thumbOf = (d: { images: Img[]; video?: { poster?: string } }) => d.images[0]?.src ?? d.video?.poster;
+
+// Everything that can open in the detail panel: heading, sub-line, facts, media, body, links.
+const details = [
+  ...projects.map((e) => ({ ...e, h: e.data.title, sub: e.data.summary, facts: [['Context', e.data.context], ['When', e.data.period], ['Role', e.data.role], ['Built with', e.data.tech.join(', ')]] as Fact[] })),
+  ...work.map((e) => ({ ...e, h: e.data.title, sub: e.data.summary, facts: [['Client', e.data.client], ['Role', e.data.role], ['When', e.data.period], ['Status', e.data.status], ['Built with', e.data.tech.join(', ')]] as Fact[] })),
+  ...games.map((e) => ({ ...e, h: e.data.title, sub: e.data.summary, facts: [['Platform', e.data.platform], ['Role', e.data.role], ['When', e.data.when], ['Status', e.data.status]] as Fact[] })),
+  ...achievements.map((e) => ({ ...e, h: e.data.title, sub: e.data.event, facts: [['Event', e.data.event], ['When', e.data.when], ['My role', e.data.role], ['Project', e.data.project], ['Team', e.data.team]] as Fact[] })),
+  ...orgs.map((e) => ({ ...e, h: e.data.position, sub: e.data.org, facts: [['Organization', e.data.org], ['Position', e.data.position], ['When', e.data.period]] as Fact[] })),
+].map((d) => ({ ...d, links: ((d.data as any).links ?? []) as { label: string; url: string }[], images: d.data.images as Img[], video: d.data.video as { src: string; poster?: string } | undefined }));
+---
+
+<Base>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <div class="shell">
+    <aside class="rail">
+      <h1 class="name">{profile.name}</h1>
+      <p class="where">{profile.location}</p>
+      <RoomSwitch hint />
+      <nav aria-label="Sections">
+        <ul class="toc">
+          {SECTIONS.map((s) => <li><a href={`#${s.id}`}>{s.title}</a></li>)}
+        </ul>
+      </nav>
+    </aside>
+
+    <main class="page" id="main">
+      <header class="topbar">
+        <span class="name">{profile.name}</span>
+        <RoomSwitch />
+      </header>
+
+      <section class="intro section" id="about" aria-labelledby="about-h">
+        <h2 id="about-h" class="visually-hidden">{title('about')}</h2>
+        <div class="section-body" data-body="about">
+          <img class="portrait" src={imgUrl('nasju-336.webp')} srcset={`${imgUrl('nasju-336.webp')} 336w, ${imgUrl('nasju-500.webp')} 500w`} sizes="168px" width="168" height="168" alt={`Portrait of ${profile.fullName}`} fetchpriority="high" />
+          <p class="headline">{profile.headline}</p>
+          <div class="about">{profile.about.map((p) => <p>{p}</p>)}</div>
+          {spotlight && (
+            <a class="new-pill" href="#games" data-goto="games">
+              <img src={thumbUrl(thumbOf(spotlight.data)!)} alt="" width="48" height="32" />
+              <span><span class="new-pill-tag">New game</span> {spotlight.data.title}</span>
+              <span class="new-pill-go" aria-hidden="true">See it ↓</span>
+            </a>
+          )}
+        </div>
+      </section>
+
+      <section class="section" id="projects" aria-labelledby="projects-h">
+        <h2 id="projects-h">{title('projects')}</h2>
+        <div class="section-body" data-body="projects">
+          <ul class="rows">
+            {projects.map((e) => (
+              <li><button class={`row${thumbOf(e.data) ? ' has-thumb' : ''}`} type="button" data-open={e.key}>
+                {thumbOf(e.data) && <img class="thumb" src={thumbUrl(thumbOf(e.data)!)} alt="" width="96" height="64" loading="lazy" decoding="async" />}
+                <span class="t">{e.data.title}</span><span class="when">{e.data.period}</span>
+                <span class="s">{e.data.summary}</span>
+                {(e.data.context || e.data.tech.length > 0) && <span class="m">{e.data.context ?? e.data.tech.join(', ')}</span>}
+              </button></li>
+            ))}
+          </ul>
+          <h3 class="sub-h">UI/UX journey</h3>
+          <ol class="timeline">
+            {designs.map((e) => (
+              <li>
+                <span class="year">{e.data.year}</span>
+                <a class="row" href={e.data.links[0]?.url} target="_blank" rel="noopener">
+                  <span class="t">{e.data.title}</span>
+                  <span class="m">{e.data.note ? `${e.data.note}. ` : ''}Opens in Figma</span>
+                </a>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+
+      <section class="section" id="work" aria-labelledby="work-h">
+        <h2 id="work-h">{title('work')}</h2>
+        <div class="section-body" data-body="work">
+          <ul class="rows">
+            {work.map((e) => (
+              <li><button class={`row${thumbOf(e.data) ? ' has-thumb' : ''}`} type="button" data-open={e.key}>
+                {thumbOf(e.data) && <img class="thumb" src={thumbUrl(thumbOf(e.data)!)} alt="" width="96" height="64" loading="lazy" decoding="async" />}
+                <span class="t">{e.data.title}{e.data.status && <span class="flag">{e.data.status}</span>}</span>
+                <span class="when">{e.data.period}</span>
+                <span class="s">{e.data.summary}</span>
+                <span class="m">{e.data.client ? `For ${e.data.client}` : e.data.role}</span>
+              </button></li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      <section class="section" id="games" aria-labelledby="games-h">
+        <h2 id="games-h">{title('games')}</h2>
+        <div class="section-body" data-body="games">
+          {spotlight && (
+            <article class="spotlight">
+              <button class="spotlight-media" type="button" data-open={spotlight.key} aria-label={`Watch the ${spotlight.data.title} trailer`}>
+                <img src={imgUrl(spotlight.data.video?.poster ?? spotlight.data.images[0].src)} alt={spotlight.data.images[0]?.alt ?? ''} width={spotlight.data.images[0]?.w} height={spotlight.data.images[0]?.h} loading="lazy" decoding="async" />
+                {spotlight.data.video && <span class="spotlight-play" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="currentColor"></path></svg></span>}
+              </button>
+              <div class="spotlight-text">
+                <p class="spotlight-tag">New game</p>
+                <h3>{spotlight.data.title}</h3>
+                <p>{spotlight.data.summary}</p>
+                <div class="spotlight-actions">
+                  {spotlight.data.video && <button class="btn btn-primary" type="button" data-open={spotlight.key}>Watch the trailer</button>}
+                  {spotlight.data.links[0] && <a class="btn" href={spotlight.data.links[0].url} target="_blank" rel="noopener">{spotlight.data.links[0].label}</a>}
+                </div>
+              </div>
+            </article>
+          )}
+          <ol class="timeline">
+            {games.map((e) => (
+              <li>
+                <span class="year">{e.data.when}</span>
+                <button class={`row${thumbOf(e.data) ? ' has-thumb' : ''}`} type="button" data-open={e.key}>
+                  {thumbOf(e.data) && <img class="thumb" src={thumbUrl(thumbOf(e.data)!)} alt="" width="96" height="64" loading="lazy" decoding="async" />}
+                  <span class="t">{e.data.title}{e.data.badge ? <span class="flag flag-new">{e.data.badge}</span> : e.data.video && <span class="flag">Trailer</span>}</span>
+                  <span class="s">{e.data.summary}</span>
+                  {(e.data.platform || e.data.role) && <span class="m">{[e.data.platform, e.data.role].filter(Boolean).join(' · ')}</span>}
+                </button>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+
+      <section class="section" id="achievements" aria-labelledby="achievements-h">
+        <h2 id="achievements-h">{title('achievements')}</h2>
+        <div class="section-body" data-body="achievements">
+          <ul class="rows">
+            {achievements.map((e) => (
+              <li><button class="row" type="button" data-open={e.key}>
+                <span class="t">{e.data.title}</span><span class="when">{e.data.when}</span>
+                <span class="s">{e.data.event}</span>
+                {(e.data.role || e.data.project) && <span class="m">{e.data.role ? `As ${e.data.role.toLowerCase()}` : `With ${e.data.project}`}</span>}
+              </button></li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      <section class="section" id="orgs" aria-labelledby="orgs-h">
+        <h2 id="orgs-h">{title('orgs')}</h2>
+        <div class="section-body" data-body="orgs">
+          <ul class="rows">
+            {orgs.map((e) => (
+              <li><button class="row org-row" type="button" data-open={e.key}>
+                <span class="t">{e.data.position}{e.data.current && <span class="flag">Current</span>}</span>
+                <span class="when">{e.data.period}</span>
+                <span class="s">{e.data.org}</span>
+              </button></li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      <section class="section" id="skills" aria-labelledby="skills-h">
+        <h2 id="skills-h">{title('skills')}</h2>
+        <div class="section-body" data-body="skills">
+          <dl class="skills">
+            {skills.map((g) => <div><dt>{g.group}</dt><dd>{g.items.join(', ')}</dd></div>)}
+          </dl>
+        </div>
+      </section>
+
+      <section class="section" id="contact" aria-labelledby="contact-h">
+        <h2 id="contact-h">{title('contact')}</h2>
+        <div class="section-body" data-body="contact">
+          <p class="lede">The fastest way to reach me is email.</p>
+          <a class="contact-email" href={`mailto:${profile.email}`}>{profile.email}</a>
+          <ul class="link-list">
+            {profile.links.map((l) => <li><a href={l.url} rel="noopener">{l.label}</a></li>)}
+          </ul>
+        </div>
+      </section>
+
+      <footer class="footer">
+        <p>Built with Astro and three.js. There's a 3D version of this page: use the room switch.</p>
+      </footer>
+    </main>
+  </div>
+
+  <!-- Detail templates: one per entry, cloned into the panel on demand. -->
+  {details.map((d) => (
+    <template id={`d-${d.key}`} data-title={title(d.key.split('-')[0])}>
+      <article class="detail">
+        <h3>{d.h}</h3>
+        <p class="sub">{d.sub}</p>
+        {d.facts.some(([, v]) => v && v.trim()) && (
+          <dl class="facts">
+            {d.facts.filter(([, v]) => v && v.trim()).map(([k, v]) => <><dt>{k}</dt><dd>{v}</dd></>)}
+          </dl>
+        )}
+        {d.video && (
+          <video class="media-video" controls preload="none" playsinline poster={d.video.poster ? imgUrl(d.video.poster) : undefined} src={videoUrl(d.video.src)}></video>
+        )}
+        {d.images.length > 0 && !(d.video && d.images.length === 1) && (
+          <div class="gallery" data-gallery data-index="0">
+            <div class="gallery-stage">
+              <button class="gallery-main" type="button" data-main aria-label="View full size"
+                {...(d.images.length === 1 ? { 'data-pic': '', 'data-src': imgUrl(d.images[0].src), 'data-alt': d.images[0].alt, 'data-w': d.images[0].w, 'data-h': d.images[0].h } : {})}>
+                <img src={imgUrl(d.images[0].src)} alt={d.images[0].alt} width={d.images[0].w} height={d.images[0].h} loading="lazy" decoding="async" />
+                <span class="gallery-zoom" aria-hidden="true">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path></svg>
+                </span>
+              </button>
+              {d.images.length > 1 && (
+                <>
+                  <button class="gallery-nav prev" type="button" data-gallery-step="-1" aria-label="Previous picture">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg>
+                  </button>
+                  <button class="gallery-nav next" type="button" data-gallery-step="1" aria-label="Next picture">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg>
+                  </button>
+                  <span class="gallery-count" aria-live="polite">1 / {d.images.length}</span>
+                </>
+              )}
+            </div>
+            {d.images.length > 1 && (
+              <div class="gallery-thumbs">
+                {d.images.map((i, k) => (
+                  <button type="button" data-pic data-src={imgUrl(i.src)} data-alt={i.alt} data-w={i.w} data-h={i.h}
+                    aria-label={`Show picture ${k + 1}: ${i.alt}`} aria-current={k === 0 ? 'true' : undefined}>
+                    <img src={thumbUrl(i.src)} alt="" width="96" height="64" loading="lazy" decoding="async" />
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+        {d.hasBody && <div class="prose"><d.Content /></div>}
+        {d.links.length > 0 && (
+          <ul class="link-list">{d.links.map((l) => <li><a href={l.url} rel="noopener" target="_blank">{l.label}</a></li>)}</ul>
+        )}
+      </article>
+    </template>
+  ))}
+
+  <!-- Shared panel for both modes -->
+  <dialog class="sheet" id="sheet" aria-labelledby="sheet-title">
+    <div class="sheet-grip" aria-hidden="true"></div>
+    <div class="sheet-head">
+      <button class="icon-btn" id="sheet-back" type="button" aria-label="Back" hidden>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg>
+      </button>
+      <h2 class="sheet-title" id="sheet-title"></h2>
+      <button class="icon-btn" id="sheet-close" type="button" aria-label="Close">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+      </button>
+    </div>
+    <div class="sheet-body" id="sheet-body"></div>
+  </dialog>
+
+  <!-- Full-screen picture viewer, used by every gallery -->
+  <dialog class="lightbox" id="lightbox" aria-label="Picture viewer">
+    <figure class="lb-figure">
+      <img id="lb-img" alt="" />
+      <figcaption><span id="lb-count"></span><span id="lb-caption"></span></figcaption>
+    </figure>
+    <button class="lb-btn lb-close" id="lb-close" type="button" aria-label="Close picture viewer">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+    </button>
+    <button class="lb-btn lb-nav lb-prev" id="lb-prev" type="button" aria-label="Previous picture">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg>
+    </button>
+    <button class="lb-btn lb-nav lb-next" id="lb-next" type="button" aria-label="Next picture">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg>
+    </button>
+  </dialog>
+
+  <!-- 3D room. Three.js is only downloaded when someone flips the switch. -->
+  <div class="stage" id="stage" hidden role="region" aria-label="3D room view">
+    <div class="stage-status" id="stage-status" hidden></div>
+    <div class="hotspot-label" id="hotspot-label" hidden aria-hidden="true"></div>
+    <div class="stage-bar">
+      <span class="name">{profile.name}</span>
+      <RoomSwitch />
+    </div>
+    <div class="dock">
+      <p class="dock-hint">Tap an object to open it. Drag to look around.</p>
+      <ul aria-label="Room objects">
+        {SECTIONS.map((s) => <li><button type="button" data-section={s.id} data-object={s.object}>{s.title}</button></li>)}
+      </ul>
+    </div>
+  </div>
+  <script type="application/json" id="room-media" set:html={JSON.stringify(roomMedia).replace(/</g, '\\u003c')} />
+</Base>
+
+<script>
+  import '../scripts/app';
+</script>

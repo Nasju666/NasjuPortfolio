@@ -1,0 +1,26 @@
+{
+  "name": "Nasju",
+  "fullName": "Amanence Junas B.",
+  "headline": "I build apps, games, and the things in between.",
+  "location": "Cebu City, Philippines",
+  "about": [
+    "I’m Amanence Junas B., Nasju for short, an Information Technology student at Cebu Eastern College in Cebu City.",
+    "I like building across the whole range: Kita, an AI-powered financial platform; White Market, a blockchain marketplace with escrow; PropConnect, which reached the grand finals of the Sinulog PropTech Hackathon; and Zoki, a booking app for a real client where I lead the development team. I’ve also been designing UI in Figma since 2023.",
+    "Games are my other half. I’ve gone from a horror driving game for a school project to game jams and Roblox titles, and after completing the Basket Accelerator 2026 internship program I was taken on as a studio lead, developing Roblox games in a Basket cohort. On campus I help run the AWS student community and coached our school team in competition."
+  ],
+  "email": "amanencejunas4@gmail.com",
+  "links": [
+    {
+      "label": "GitHub",
+      "url": "https://github.com/Nasju666"
+    },
+    {
+      "label": "LinkedIn",
+      "url": "https://www.linkedin.com/in/nasju"
+    },
+    {
+      "label": "itch.io",
+      "url": "https://nasju666.itch.io"
+    }
+  ]
+}

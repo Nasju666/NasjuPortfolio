@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.astro/
+.DS_Store
+*.log
+.env
+blender/export/
+*.blend1
+__pycache__/

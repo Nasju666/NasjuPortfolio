@@ -1,0 +1,16 @@
+---
+// The mode toggle. There are a few copies on the page (rail, phone top bar, inside the room);
+// app.ts keeps them in sync through aria-pressed.
+interface Props {
+  hint?: boolean;
+}
+const { hint = false } = Astro.props;
+---
+
+<button class="room-switch js-room-switch" type="button" aria-pressed="false">
+  <span class="track" aria-hidden="true"><span class="knob"></span></span>
+  <span>
+    <span class="js-switch-label">Enter the room</span>
+    {hint && <span class="switch-hint js-switch-hint">See this portfolio in 3D</span>}
+  </span>
+</button>

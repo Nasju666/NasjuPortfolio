@@ -1,0 +1,35 @@
+---
+import '../styles/global.css';
+import profile from '../data/profile.json';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+const { title = `${profile.name} — Portfolio`, description = profile.headline } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta name="theme-color" content="#f3f4f8" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#161a26" media="(prefers-color-scheme: dark)" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preload" href="/fonts/recursive-casl-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <script is:inline>
+      // Runs before paint: remember whether the visitor left the site in the room.
+      try {
+        if (localStorage.getItem('portfolio-mode') === 'room') document.documentElement.dataset.resumeRoom = '1';
+      } catch (e) {}
+    </script>
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

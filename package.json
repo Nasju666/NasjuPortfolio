@@ -1,0 +1,25 @@
+{
+  "name": "nasju-portfolio",
+  "version": "0.1.0",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "room:build": "python blender/make_textures.py && python blender/build_room.py",
+    "room:bake": "python blender/bake_export.py",
+    "room:compress": "gltf-transform optimize blender/export/room-raw.glb public/models/room.glb --compress meshopt --texture-compress webp --flatten false --join false --instance false --palette false --simplify false --texture-size 2048 && gltf-transform optimize blender/export/room-raw.glb public/models/room-low.glb --compress meshopt --texture-compress webp --flatten false --join false --instance false --palette false --simplify false --texture-size 1024",
+    "room:preview": "python blender/render_preview.py"
+  },
+  "dependencies": {
+    "astro": "^7.4.0",
+    "three": "^0.186.1"
+  },
+  "devDependencies": {
+    "@gltf-transform/cli": "^4.5.1",
+    "@types/three": "^0.186.0",
+    "typescript": "^7.0.2"
+  },
+  "type": "module",
+  "private": true
+}

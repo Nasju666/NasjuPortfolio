@@ -1,0 +1,9 @@
+[
+  { "group": "Languages", "items": ["Python", "JavaScript", "HTML/CSS"] },
+  { "group": "Frameworks", "items": ["FastAPI", "Node.js", "React", "React Native", "Django", "Laravel"] },
+  { "group": "Cloud & DevOps", "items": ["AWS", "Git/GitHub", "GitHub Actions"] },
+  { "group": "Data & APIs", "items": ["PostgreSQL", "MySQL", "SQLite", "RESTful APIs"] },
+  { "group": "Game dev", "items": ["Unity", "Godot", "Roblox Studio"] },
+  { "group": "Design", "items": ["Figma", "UI/UX"] },
+  { "group": "Coursework", "items": ["Object-Oriented Programming", "Data Structures and Algorithms", "UI/UX", "Web Systems", "System Architecture", "Cloud Computing", "Game Development", "Blockchain"] }
+]
