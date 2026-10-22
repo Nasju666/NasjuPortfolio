@@ -1,6 +1,6 @@
 <div align="center">
 
-#  Amanence Junas B. (Nasju)
+#  Hi I'm Nasju
 ### *I build apps, games, and the things in between.*
 
 [![Website](https://img.shields.io/badge/Live_Portfolio-nasju.me-black?style=for-the-badge&logo=vercel&logoColor=white)](https://nasju.me)
