@@ -18,7 +18,7 @@ images:
     alt: "Kita Loan Readiness Report showing a readiness score and RAFI microfinance requirements"
     w: 720
     h: 1600
-context: "Capstone project"
+context: "PSITE 7 Innovation Challenge 2026 · Top 6 finalist"
 tech:
   - "React Native (Expo)"
   - "Firebase (Auth, Firestore, Storage)"

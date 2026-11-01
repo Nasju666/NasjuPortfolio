@@ -2,6 +2,7 @@
 title: "Top 6 finalist"
 event: "PSITE 7 Innovation Challenge 2026"
 when: "April 2026"
+project: "Kita"
 featured: true
 order: 2
 images:
