@@ -1,6 +1,6 @@
 ---
 title: "Sari-Sari Store Performance Tracker"
-order: 6
+order: 7
 summary: "Web app that helps small retail owners track sales, manage inventory, log expenses and see how their store is doing."
 links:
   - label: "Project files (Google Drive)"

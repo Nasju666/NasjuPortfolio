@@ -1,6 +1,6 @@
 ---
 title: "White Market"
-order: 5
+order: 6
 summary: "Blockchain-based peer-to-peer marketplace with escrow, dispute resolution and an admin dashboard."
 links:
   - label: "Source on GitHub"

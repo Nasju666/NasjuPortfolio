@@ -1,6 +1,6 @@
 ---
 title: "ElecTrack"
-order: 8
+order: 9
 draft: true
 summary: "IoT smart energy monitoring system (team capstone research)."
 ---
