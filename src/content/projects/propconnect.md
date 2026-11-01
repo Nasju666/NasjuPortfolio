@@ -1,6 +1,6 @@
 ---
 title: "PropConnect"
-order: 2
+order: 4
 period: "January 2026"
 summary: "AI-driven web app that helps real estate businesses grow, using intelligent agents for property discovery and customer relationship management."
 links:

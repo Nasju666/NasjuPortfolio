@@ -1,7 +1,7 @@
 ---
 title: "Long Road Home"
 when: "First game"
-platform: "Unity"
+platform: "Unity · C#"
 status: "Released"
 summary: "Horror car driving game, made as a school project."
 links:
@@ -15,4 +15,4 @@ images:
 order: 1
 ---
 
-My first ever game, a school project: a lonely drive home at night that turns into a nightmare of trust and survival. Made in Unity.
+My first ever game, a school project: a lonely drive home at night that turns into a nightmare of trust and survival. Made in Unity, with all the gameplay scripted in C#.

@@ -1,6 +1,6 @@
 ---
 title: "RugbeeAppeal"
-order: 5
+order: 7
 context: "School project"
 summary: "Online clothing marketplace with product browsing, navigation and a shopping cart."
 tech:

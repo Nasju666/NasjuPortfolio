@@ -17,14 +17,15 @@ images:
     h: 640
 order: 4
 when: "October 2026"
-platform: "Unity · Windows"
+platform: "Unity · C# · Windows"
 role: "Solo developer"
 ---
 
-A first-person 3D puzzle game. You play a Reader searching the Archive's halls for three lost Rule Cards, **Kinetic Link**, **Invert Gravity** and **Solidify Air**, guided by a runic construct named Glyph. Restore the Repository, then use all three cards to escape before the Archive collapses.
+A first-person 3D puzzle game, built solo in Unity with C#. You play a Reader searching the Archive's halls for three lost Rule Cards, **Kinetic Link**, **Invert Gravity** and **Solidify Air**, guided by a runic construct named Glyph. Restore the Repository, then use all three cards to escape before the Archive collapses.
 
 - 4 stages and a finale, with hidden lore to find
 - A hint system and a run timer that tracks your best time
 - A low-end mode that picks graphics settings automatically
+- Scripted in C#: the card abilities, puzzles, hints and timer
 
 Free on itch.io for Windows.

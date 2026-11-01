@@ -15,8 +15,8 @@ images:
     w: 1280
     h: 720
 order: 2
-platform: "Unity"
+platform: "Unity · C#"
 role: "Developer, team of 3"
 ---
 
-A 3D troll platformer that's designed to mess with you, across stages like *Skills Issue*, *As Above So Below* and *Path of No Return* (with rising lava). Made with Kevin Jheazer Villaro and Mike Alinghawa.
+A 3D troll platformer that's designed to mess with you, across stages like *Skills Issue*, *As Above So Below* and *Path of No Return* (with rising lava). Made in Unity with C#, together with Kevin Jheazer Villaro and Mike Alinghawa.
