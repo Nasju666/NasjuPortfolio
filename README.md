@@ -21,7 +21,7 @@
 I’m **Amanence Junas B.** (*Nasju*), an Information Technology student and developer passionate about creating immersive web apps, games, and polished UI/UX experiences.
 
 - 🚀 **Full-Stack & Web3:** Built platforms like **Kita** (AI financial platform), **White Market** (blockchain marketplace with escrow), and **PropConnect** (Sinulog PropTech Hackathon Grand Finalist).
-- 🎮 **Game Development & 3D:** Studio Lead developing Roblox titles in a Basket cohort, creator of indie game jam entries, and developer of interactive 3D web experiences using **Three.js** and **Blender**.
+- 🎮 **Game Development & 3D:** completed the Basket Accelerator internship program for Roblox game development, creator of indie game jam entries, and developer of interactive 3D web experiences using **Three.js** and **Blender**.
 - 🎨 **UI/UX Design:** Designing clean interfaces in Figma since 2023.
 - 🤝 **Leadership & Community:** Core lead in the campus AWS Student Builder Group / Cloud Club & competitive team coach.
 
@@ -32,7 +32,7 @@ I’m **Amanence Junas B.** (*Nasju*), an Information Technology student and dev
 This repository powers **[nasju.me](https://nasju.me)** — an interactive portfolio with two viewing modes:
 
 1. **📄 Minimal Page Mode:** Fast, lightweight static HTML (~7 KB JS), optimized for mobile & quick reading.
-2. **🛋️ 3D Room Mode:** An interactive 3D desk corner built with **Blender** and **Three.js** with light-baked textures. Clicking objects on the desk opens different portfolio sections (Monitor → Projects, PC → Games, Laptop → Work, etc.).
+2. **🛋️ 3D Room Mode:** An interactive 3D desk corner built with **Blender** and **Three.js** with light-baked textures. Clicking objects on the desk opens different portfolio sections (Monitor → Projects, PC → Games, Laptop → Projects, etc.).
 
 ---
 

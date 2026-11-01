@@ -520,7 +520,7 @@ def build():
         sphere(f'gamepad_grip_{s}', 0.03, (s * 0.055, -0.025, -0.002), M['black'], gp, scale=(1, 1.3, 0.7))
         cyl(f'gamepad_stick_{s}', 0.009, 0.012, (s * 0.03, -0.004, 0.018), M['speaker_cone'], gp, bev=0.003)
 
-    # --- Laptop (Work) -----------------------------------------------------------------
+    # --- Laptop (Projects) -------------------------------------------------------------
     hit = empty('hit_laptop')
     lp = empty('laptop', hit)
     lp.location = (-1.17, -0.62, DESK_Z)

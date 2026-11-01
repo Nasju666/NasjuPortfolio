@@ -5,7 +5,6 @@
 export type SectionId =
   | 'about'
   | 'projects'
-  | 'work'
   | 'games'
   | 'achievements'
   | 'orgs'
@@ -21,8 +20,7 @@ export interface SectionDef {
 
 export const SECTIONS: SectionDef[] = [
   { id: 'about', title: 'About', object: 'poster' },
-  { id: 'projects', title: 'Projects', object: 'monitor' },
-  { id: 'work', title: 'Work', object: 'laptop' },
+  { id: 'projects', title: 'Projects', object: 'monitor', alsoObjects: ['laptop'] },
   { id: 'games', title: 'Game dev journey', object: 'pc' },
   { id: 'achievements', title: 'Achievements', object: 'trophies', alsoObjects: ['clipboard'] },
   { id: 'orgs', title: 'Organizations', object: 'corkboard', alsoObjects: ['banner'] },

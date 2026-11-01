@@ -17,7 +17,7 @@ const thumbUrl = (file: string) => imgUrl(file.replace(/\.webp$/, '-thumb.webp')
 const videoUrl = (file: string) => `${base}/videos/${file}`;
 
 // Load a collection, drop drafts, sort, and pre-render each Markdown body.
-async function load<C extends 'projects' | 'designs' | 'work' | 'games' | 'achievements' | 'orgs'>(name: C) {
+async function load<C extends 'projects' | 'designs' | 'games' | 'achievements' | 'orgs'>(name: C) {
   const entries = (await getCollection(name)).filter((e: any) => !e.data.draft);
   entries.sort((a: any, b: any) => a.data.order - b.data.order);
   return Promise.all(
@@ -27,19 +27,18 @@ async function load<C extends 'projects' | 'designs' | 'work' | 'games' | 'achie
 
 const projects = await load('projects');
 const designs = await load('designs');
-const work = await load('work');
 const games = await load('games');
 const achievements = await load('achievements');
 const orgs = await load('orgs');
 
 const spotlight = games.find((e) => e.data.spotlight);
 
-// Pictures the 3D room shows: project screenshots on the monitor, the first client app on the laptop,
+// Pictures the 3D room shows: the first four projects on the monitor, the fifth on the laptop,
 // Organizations photos pinned on the corkboard, the wall banner and the photo in the framed print.
 const firstImg = (d: { images: Img[] }) => (d.images[0] ? imgUrl(d.images[0].src) : null);
 const roomMedia = {
   monitor: projects.slice(0, 4).map((e) => ({ title: e.data.title, img: firstImg(e.data) })),
-  laptop: work[0] ? { title: work[0].data.title, img: firstImg(work[0].data) } : null,
+  laptop: projects[4] ? { title: projects[4].data.title, img: firstImg(projects[4].data) } : null,
   board: orgs.flatMap((e) => e.data.images as Img[]).filter((i) => i.src !== ROOM_BANNER).slice(0, 7).map((i) => imgUrl(i.src)),
   banner: imgUrl(ROOM_BANNER),
   print: imgUrl(ROOM_PRINT),
@@ -50,7 +49,6 @@ const thumbOf = (d: { images: Img[]; video?: { poster?: string } }) => d.images[
 // Everything that can open in the detail panel: heading, sub-line, facts, media, body, links.
 const details = [
   ...projects.map((e) => ({ ...e, h: e.data.title, sub: e.data.summary, facts: [['Context', e.data.context], ['When', e.data.period], ['Role', e.data.role], ['Built with', e.data.tech.join(', ')]] as Fact[] })),
-  ...work.map((e) => ({ ...e, h: e.data.title, sub: e.data.summary, facts: [['Client', e.data.client], ['Role', e.data.role], ['When', e.data.period], ['Status', e.data.status], ['Built with', e.data.tech.join(', ')]] as Fact[] })),
   ...games.map((e) => ({ ...e, h: e.data.title, sub: e.data.summary, facts: [['Platform', e.data.platform], ['Role', e.data.role], ['When', e.data.when], ['Status', e.data.status]] as Fact[] })),
   ...achievements.map((e) => ({ ...e, h: e.data.title, sub: e.data.event, facts: [['Event', e.data.event], ['When', e.data.when], ['My role', e.data.role], ['Project', e.data.project], ['Team', e.data.team]] as Fact[] })),
   ...orgs.map((e) => ({ ...e, h: e.data.position, sub: e.data.org, facts: [['Organization', e.data.org], ['Position', e.data.position], ['When', e.data.period]] as Fact[] })),
@@ -119,23 +117,6 @@ const details = [
               </li>
             ))}
           </ol>
-        </div>
-      </section>
-
-      <section class="section" id="work" aria-labelledby="work-h">
-        <h2 id="work-h">{title('work')}</h2>
-        <div class="section-body" data-body="work">
-          <ul class="rows">
-            {work.map((e) => (
-              <li><button class={`row${thumbOf(e.data) ? ' has-thumb' : ''}`} type="button" data-open={e.key}>
-                {thumbOf(e.data) && <img class="thumb" src={thumbUrl(thumbOf(e.data)!)} alt="" width="96" height="64" loading="lazy" decoding="async" />}
-                <span class="t">{e.data.title}{e.data.status && <span class="flag">{e.data.status}</span>}</span>
-                <span class="when">{e.data.period}</span>
-                <span class="s">{e.data.summary}</span>
-                <span class="m">{e.data.client ? `For ${e.data.client}` : e.data.role}</span>
-              </button></li>
-            ))}
-          </ul>
         </div>
       </section>
 

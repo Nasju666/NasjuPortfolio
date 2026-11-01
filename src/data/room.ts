@@ -13,6 +13,6 @@ export const CAMERA_URL = `${base}/models/room-camera.json`;
 //   ROOM_BANNER  hangs on the wall above the shelf (wide image, about 2.7 : 1)
 //   ROOM_PRINT   the framed print on the shelf
 // The corkboard shows the Organizations photos (first seven, the banner skipped),
-// the monitor the first four Projects, the laptop the first Work entry.
+// the monitor the first four Projects, the laptop the fifth.
 export const ROOM_BANNER = 'sbg-banner.webp';
 export const ROOM_PRINT = 'nasju-500.webp';

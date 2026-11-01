@@ -49,22 +49,6 @@ const designs = defineCollection({
   }),
 });
 
-const work = defineCollection({
-  loader: glob({ pattern: '**/*.md', base: './src/content/work' }),
-  schema: z.object({
-    ...base,
-    ...media,
-    title: z.string(), // app / product name
-    client: z.string().optional(),
-    summary: z.string(),
-    role: z.string(),
-    period: z.string().optional(),
-    status: z.string().optional(), // e.g. "Maintaining"
-    tech: z.array(z.string()).default([]),
-    links: z.array(link).default([]),
-  }),
-});
-
 // Game dev journey: shown as a timeline in `order`.
 const games = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/games' }),
@@ -111,4 +95,4 @@ const orgs = defineCollection({
   }),
 });
 
-export const collections = { projects, designs, work, games, achievements, orgs };
+export const collections = { projects, designs, games, achievements, orgs };

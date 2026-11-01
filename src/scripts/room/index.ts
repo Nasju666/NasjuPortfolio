@@ -62,7 +62,7 @@ interface Options {
 export interface RoomMedia {
   /** Projects on the monitor (first four): name + screenshot. */
   monitor?: { title: string; img: string | null }[];
-  /** App shown on the laptop screen. */
+  /** Project shown on the laptop screen. */
   laptop?: { title: string; img: string | null } | null;
   /** Photos pinned on the corkboard (up to seven). */
   board?: string[];
